@@ -1,0 +1,30 @@
+name: iOS Build Test
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '20'
+
+    - name: Install JavaScript dependencies
+      run: npm install
+
+    - name: Install CocoaPods
+      run: |
+        cd ios
+        pod install
+        cd ..
+
+    - name: Build Xcode project
+      run: xcodebuild -workspace ios/Potuzhnometr.xcworkspace -scheme Potuzhnometr -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 15 Pro' build
