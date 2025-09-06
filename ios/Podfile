@@ -1,32 +1,25 @@
+# Podfile
+
 require_relative '../node_modules/react-native/scripts/react_native_pods'
 require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
 
 platform :ios, '13.0'
 
+# Эта секция должна быть до 'target'
+use_flipper!({'Flipper-Folly' => '2.6.1', 'Flipper-RSocket' => '1.4.0'})
+post_install do |installer|
+  flipper_post_install(installer)
+end
+
 target 'Potuzhnometr' do
   use_modular_headers!
   config = use_native_modules!
-  flipper_config = ENV['NO_FLIPPER'] == "1" ? FlipperConfiguration.disabled : FlipperConfiguration.enabled
-  linkage = ENV['USE_FRAMEWORKS']
-  if linkage != nil
-    Pod::UI.puts "Configuring Flipper with #{linkage} linkage"
-    use_flipper!(flipper_config, linkage: linkage)
-  else
-    use_flipper!(flipper_config)
-  end
-  post_install do |installer|
-    flipper_post_install(installer)
-    installer.pods_project.targets.each do |target|
-      if target.name == 'React-hermes'
-        target.build_configurations.each do |config|
-          config.build_settings['HERMES_COMPILE_FLAGS'] = '-O0'
-        end
-      end
-    end
-  end
+
   use_react_native!(
     :path => config[:reactNativePath],
     :hermes_enabled => true,
-    :fabric_enabled => true
+    :fabric_enabled => true,
   )
+
+  # ...
 end
