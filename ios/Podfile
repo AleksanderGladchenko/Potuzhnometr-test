@@ -5,7 +5,7 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '13.0'
 
-# Эта секция должна быть до 'target'
+# Эта секция определяет Flipper и должна быть до 'target'
 use_flipper!({'Flipper-Folly' => '2.6.1', 'Flipper-RSocket' => '1.4.0'})
 post_install do |installer|
   flipper_post_install(installer)
